@@ -21,10 +21,29 @@
           </div>
 
           <div class="control-group">
+            <div class="label">Preset</div>
+            <select id="orientationPreset" class="select">
+              <option value="default">Default</option>
+              <option value="diy45">DIY 45° Glass</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <div class="label">Orientation</div>
             <label class="toggle">
-              <input id="mirrorToggle" type="checkbox" />
-              <span>Mirror vertical</span>
+              <input id="flipXToggle" type="checkbox" />
+              <span>Flip X</span>
             </label>
+            <label class="toggle">
+              <input id="flipYToggle" type="checkbox" />
+              <span>Flip Y</span>
+            </label>
+            <label class="toggle">
+              <input id="rotateToggle" type="checkbox" />
+              <span>Rotate 180°</span>
+            </label>
+            <button id="recalibrateBtn" class="btn" type="button">Recalibrate</button>
           </div>
 
           <div class="control-group">
@@ -67,6 +86,7 @@
             <div class="panel-actions">
               <button id="clearBtn" class="btn" type="button">Clear</button>
               <button id="loadSampleBtn" class="btn" type="button">Sample</button>
+              <button id="loadCalibScriptBtn" class="btn" type="button">Load Test</button>
             </div>
           </div>
           <textarea id="scriptInput" class="textarea" spellcheck="false" placeholder="Paste or type your script here..."></textarea>
@@ -82,6 +102,22 @@
           </div>
 
           <div id="viewport" class="viewport" tabindex="0">
+            <div id="calibrationCard" class="calibration-card" hidden>
+              <div class="calibration-title">Calibration</div>
+              <div class="calibration-copy">Look through the glass. Which line is at the top?</div>
+              <div class="calibration-grid">
+                <button id="calibTopIs1Btn" class="btn" type="button">Top is LINE 1</button>
+                <button id="calibTopIs3Btn" class="btn" type="button">Top is LINE 3</button>
+                <button id="calibMotionUpBtn" class="btn" type="button">Motion looks UP</button>
+                <button id="calibMotionDownBtn" class="btn" type="button">Motion looks DOWN</button>
+              </div>
+              <div id="calibStatus" class="calibration-status">Step 1/2: choose top line.</div>
+              <div class="calibration-actions">
+                <button id="applyCalibrationBtn" class="btn primary" type="button" disabled>Apply Calibration</button>
+                <button id="cancelCalibrationBtn" class="btn" type="button">Cancel</button>
+              </div>
+            </div>
+
             <div id="prompterOverlay" class="prompter-overlay" aria-hidden="true">
               <button id="overlayExitBtn" class="overlay-btn" type="button" aria-label="Exit Prompter Only">X</button>
               <button id="overlayToggleBtn" class="overlay-btn" type="button">Hide</button>
