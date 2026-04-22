@@ -23,6 +23,7 @@ const enterFullscreenBtn = document.getElementById('enterFullscreenBtn');
 const swapPanelsBtn = document.getElementById('swapPanelsBtn');
 
 const overlayToggleBtn = document.getElementById('overlayToggleBtn');
+const overlayExitBtn = document.getElementById('overlayExitBtn');
 const overlayScrollBtn = document.getElementById('overlayScrollBtn');
 const overlayResetBtn = document.getElementById('overlayResetBtn');
 const overlayFullscreenBtn = document.getElementById('overlayFullscreenBtn');
@@ -194,6 +195,10 @@ overlayResetBtn.addEventListener('click', () => {
 });
 
 overlayFullscreenBtn.addEventListener('click', toggleFullscreen);
+
+overlayExitBtn.addEventListener('click', () => {
+  setPrompterOnly(false);
+});
 
 overlayToggleBtn.addEventListener('click', () => {
   const hidden = document.body.classList.toggle('overlay-hidden');
