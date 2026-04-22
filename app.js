@@ -68,8 +68,8 @@ function getSpeed() {
 
 function applyTransform() {
   const mirrored = mirrorToggle.checked;
-  const translate = `translate3d(0, ${-scrollY}px, 0)`;
-  inner.style.transform = mirrored ? `${translate} scaleY(-1)` : translate;
+  const translate = `translate3d(0, ${scrollY}px, 0)`;
+  inner.style.transform = mirrored ? `${translate} scaleX(-1)` : translate;
 }
 
 function setScriptText(text) {
