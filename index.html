@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teleprompter</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <div class="title">Teleprompter</div>
+          <div class="subtitle">Mirror, font size, and smooth scrolling</div>
+        </div>
+
+        <div class="controls">
+          <div class="control-group">
+            <button id="toggleScrollBtn" class="btn primary" type="button">Start</button>
+            <button id="resetBtn" class="btn" type="button">Reset</button>
+          </div>
+
+          <div class="control-group">
+            <label class="toggle">
+              <input id="mirrorToggle" type="checkbox" />
+              <span>Mirror vertical</span>
+            </label>
+          </div>
+
+          <div class="control-group">
+            <div class="label">Font</div>
+            <div class="stack">
+              <div class="row">
+                <button id="fontDecBtn" class="btn" type="button">A-</button>
+                <input id="fontSizeRange" class="range" type="range" min="18" max="120" step="1" />
+                <button id="fontIncBtn" class="btn" type="button">A+</button>
+              </div>
+              <div class="hint"><span id="fontSizeValue"></span> px</div>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="label">Speed</div>
+            <div class="stack">
+              <div class="row">
+                <input id="speedRange" class="range" type="range" min="0" max="300" step="1" />
+              </div>
+              <div class="hint"><span id="speedValue"></span> px/s</div>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="label">View</div>
+            <div class="row">
+              <button id="prompterOnlyBtn" class="btn" type="button">Prompter Only</button>
+              <button id="enterFullscreenBtn" class="btn" type="button">Fullscreen</button>
+              <button id="swapPanelsBtn" class="btn" type="button">Swap</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="content">
+        <section id="editorPanel" class="panel editor">
+          <div class="panel-header">
+            <div class="panel-title">Script</div>
+            <div class="panel-actions">
+              <button id="clearBtn" class="btn" type="button">Clear</button>
+              <button id="loadSampleBtn" class="btn" type="button">Sample</button>
+            </div>
+          </div>
+          <textarea id="scriptInput" class="textarea" spellcheck="false" placeholder="Paste or type your script here..."></textarea>
+        </section>
+
+        <section id="prompterPanel" class="panel prompter">
+          <div class="panel-header">
+            <div class="panel-title">Prompter</div>
+            <div class="panel-actions">
+              <div class="pill">Space = Start/Stop</div>
+              <div class="pill">R = Reset</div>
+            </div>
+          </div>
+
+          <div id="viewport" class="viewport" tabindex="0">
+            <div id="inner" class="inner">
+              <div id="scriptDisplay" class="script-display"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
