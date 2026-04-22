@@ -47,6 +47,7 @@ const applyCalibrationBtn = document.getElementById('applyCalibrationBtn');
 const cancelCalibrationBtn = document.getElementById('cancelCalibrationBtn');
 
 const SETTINGS_KEY = 'teleprompter.settings.v2';
+const SCRIPT_KEY = 'teleprompter.script.v1';
 const CALIBRATION_SCRIPT = [
   'LINE 1',
   '',
@@ -135,8 +136,25 @@ function saveSettings() {
       preset: state.preset,
       orientation: { ...state.orientation },
       scrollDirection: state.scrollDirection,
+      calibration: { ...state.calibration },
     };
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(payload));
+  } catch {
+    // Ignore storage failures.
+  }
+}
+
+function loadSavedScript() {
+  try {
+    return localStorage.getItem(SCRIPT_KEY) ?? '';
+  } catch {
+    return '';
+  }
+}
+
+function saveScriptText(text) {
+  try {
+    localStorage.setItem(SCRIPT_KEY, text);
   } catch {
     // Ignore storage failures.
   }
@@ -226,6 +244,7 @@ function setScriptText(text) {
   scriptInput.value = text;
   renderScriptDisplay();
   resetScroll();
+  saveScriptText(text);
 }
 
 function resetScroll() {
@@ -372,6 +391,11 @@ function applyCalibration() {
 
   setOrientation(orientation, { preset: 'custom', persist: false });
   setScrollDirection(motion, { persist: false });
+  state.calibration = {
+    topLine: state.calibration.topLine,
+    motion: state.calibration.motion,
+    readability: state.calibration.readability,
+  };
   saveSettings();
   endCalibration();
 }
@@ -379,6 +403,7 @@ function applyCalibration() {
 scriptInput.addEventListener('input', () => {
   renderScriptDisplay();
   resetScroll();
+  saveScriptText(scriptInput.value);
 });
 
 fontSizeRange.addEventListener('input', () => setFontSize(Number(fontSizeRange.value)));
@@ -568,6 +593,11 @@ window.addEventListener('resize', () => {
     };
     state.scrollDirection = saved.scrollDirection === 'down' ? 'down' : 'up';
     state.preset = saved.preset || 'custom';
+    if (saved.calibration && typeof saved.calibration === 'object') {
+      state.calibration.topLine = saved.calibration.topLine ?? null;
+      state.calibration.motion = saved.calibration.motion ?? null;
+      state.calibration.readability = saved.calibration.readability ?? null;
+    }
     syncOrientationControls();
   } else {
     applyPreset(DEFAULTS.preset, { persist: false });
@@ -576,7 +606,8 @@ window.addEventListener('resize', () => {
   setPrompterOnly(false);
   overlayToggleBtn.textContent = 'Hide';
   overlayScrollBtn.textContent = 'Start';
+  calibScrollBtn.textContent = 'Start';
   calibrationCard.hidden = true;
-  renderScriptDisplay();
+  setScriptText(loadSavedScript());
   resetScroll();
 })();

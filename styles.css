@@ -371,7 +371,7 @@ body.prompter-only.overlay-hidden .prompter-overlay {
   left: 0;
   right: 0;
   will-change: transform;
-  padding: 60px 56px 80px;
+  padding: 110px 56px 80px;
 }
 
 .script-display {
