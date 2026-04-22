@@ -39,6 +39,8 @@ const calibTopIs1Btn = document.getElementById('calibTopIs1Btn');
 const calibTopIs3Btn = document.getElementById('calibTopIs3Btn');
 const calibMotionUpBtn = document.getElementById('calibMotionUpBtn');
 const calibMotionDownBtn = document.getElementById('calibMotionDownBtn');
+const calibReadNormalBtn = document.getElementById('calibReadNormalBtn');
+const calibReadBackwardBtn = document.getElementById('calibReadBackwardBtn');
 const calibStatus = document.getElementById('calibStatus');
 const calibScrollBtn = document.getElementById('calibScrollBtn');
 const applyCalibrationBtn = document.getElementById('applyCalibrationBtn');
@@ -103,6 +105,7 @@ const state = {
   calibration: {
     topLine: null,
     motion: null,
+    readability: null,
   },
 };
 
@@ -321,16 +324,24 @@ function updateCalibrationUI() {
   calibTopIs3Btn.classList.toggle('active', state.calibration.topLine === 3);
   calibMotionUpBtn.classList.toggle('active', state.calibration.motion === 'up');
   calibMotionDownBtn.classList.toggle('active', state.calibration.motion === 'down');
+  calibReadNormalBtn.classList.toggle('active', state.calibration.readability === 'normal');
+  calibReadBackwardBtn.classList.toggle('active', state.calibration.readability === 'backward');
 
   if (state.calibration.topLine == null) {
-    calibStatus.textContent = 'Step 1/2: choose top line.';
+    calibStatus.textContent = 'Step 1/3: choose top line.';
   } else if (state.calibration.motion == null) {
-    calibStatus.textContent = 'Step 2/2: choose visible motion direction.';
+    calibStatus.textContent = 'Step 2/3: choose visible motion direction.';
+  } else if (state.calibration.readability == null) {
+    calibStatus.textContent = 'Step 3/3: choose whether text reads normal or backward.';
   } else {
     calibStatus.textContent = 'Ready: apply calibration.';
   }
 
-  applyCalibrationBtn.disabled = !(state.calibration.topLine && state.calibration.motion);
+  applyCalibrationBtn.disabled = !(
+    state.calibration.topLine &&
+    state.calibration.motion &&
+    state.calibration.readability
+  );
 }
 
 function startCalibration() {
@@ -340,6 +351,7 @@ function startCalibration() {
   calibrationCard.hidden = false;
   state.calibration.topLine = null;
   state.calibration.motion = null;
+  state.calibration.readability = null;
   setScriptText(CALIBRATION_SCRIPT);
   calibScrollBtn.textContent = 'Start';
   updateCalibrationUI();
@@ -352,7 +364,7 @@ function endCalibration() {
 
 function applyCalibration() {
   const orientation = {
-    flipX: false,
+    flipX: state.calibration.readability === 'backward',
     flipY: state.calibration.topLine === 3,
     rotate180: false,
   };
@@ -489,6 +501,16 @@ calibMotionUpBtn.addEventListener('click', () => {
 
 calibMotionDownBtn.addEventListener('click', () => {
   state.calibration.motion = 'down';
+  updateCalibrationUI();
+});
+
+calibReadNormalBtn.addEventListener('click', () => {
+  state.calibration.readability = 'normal';
+  updateCalibrationUI();
+});
+
+calibReadBackwardBtn.addEventListener('click', () => {
+  state.calibration.readability = 'backward';
   updateCalibrationUI();
 });
 
