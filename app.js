@@ -59,6 +59,8 @@ function setSpeed(pxPerSec) {
 function setMirrored(mirrored) {
   mirrorToggle.checked = mirrored;
   prompterPanel.classList.toggle('mirrored', mirrored);
+  renderScriptDisplay();
+  resetScroll();
   applyTransform();
 }
 
@@ -69,13 +71,23 @@ function getSpeed() {
 function applyTransform() {
   const mirrored = mirrorToggle.checked;
   const translate = `translate3d(0, ${-scrollY}px, 0)`;
-  inner.style.transform = mirrored ? `${translate} scaleX(-1)` : translate;
+  inner.style.transform = mirrored ? `${translate} scaleY(-1)` : translate;
 }
 
 function setScriptText(text) {
   scriptInput.value = text;
-  scriptDisplay.textContent = text;
+  renderScriptDisplay();
   resetScroll();
+}
+
+function getRenderedScriptText() {
+  const text = scriptInput.value;
+  if (!mirrorToggle.checked) return text;
+  return text.split('\n').reverse().join('\n');
+}
+
+function renderScriptDisplay() {
+  scriptDisplay.textContent = getRenderedScriptText();
 }
 
 function resetScroll() {
@@ -168,7 +180,7 @@ function swapPanels() {
 }
 
 scriptInput.addEventListener('input', () => {
-  scriptDisplay.textContent = scriptInput.value;
+  renderScriptDisplay();
   resetScroll();
 });
 
@@ -220,7 +232,7 @@ loadSampleBtn.addEventListener('click', () => {
       '- Reset: button or R',
       '- Font: A- / A+ or slider',
       '- Speed: slider (px/s)',
-      '- Mirror (left-right): toggle',
+      '- Mirror vertical: toggle',
       '',
       'Tip: Put your browser in fullscreen for a clean prompter view.',
       '',
