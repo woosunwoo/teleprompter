@@ -40,11 +40,36 @@ const calibTopIs3Btn = document.getElementById('calibTopIs3Btn');
 const calibMotionUpBtn = document.getElementById('calibMotionUpBtn');
 const calibMotionDownBtn = document.getElementById('calibMotionDownBtn');
 const calibStatus = document.getElementById('calibStatus');
+const calibScrollBtn = document.getElementById('calibScrollBtn');
 const applyCalibrationBtn = document.getElementById('applyCalibrationBtn');
 const cancelCalibrationBtn = document.getElementById('cancelCalibrationBtn');
 
 const SETTINGS_KEY = 'teleprompter.settings.v2';
-const CALIBRATION_SCRIPT = ['LINE 1', '', 'LINE 2', '', 'LINE 3'].join('\n');
+const CALIBRATION_SCRIPT = [
+  'LINE 1',
+  '',
+  'LINE 2',
+  '',
+  'LINE 3',
+  '',
+  'LINE 4',
+  '',
+  'LINE 5',
+  '',
+  'LINE 6',
+  '',
+  'LINE 7',
+  '',
+  'LINE 8',
+  '',
+  'LINE 9',
+  '',
+  'LINE 10',
+  '',
+  'LINE 11',
+  '',
+  'LINE 12',
+].join('\n');
 
 const PRESETS = {
   default: {
@@ -239,6 +264,7 @@ function start() {
   isRunning = true;
   toggleScrollBtn.textContent = 'Stop';
   overlayScrollBtn.textContent = 'Stop';
+  calibScrollBtn.textContent = 'Stop';
   viewport.focus();
   rafId = requestAnimationFrame(tick);
 }
@@ -248,6 +274,7 @@ function stop() {
   isRunning = false;
   toggleScrollBtn.textContent = 'Start';
   overlayScrollBtn.textContent = 'Start';
+  calibScrollBtn.textContent = 'Start';
   if (rafId != null) cancelAnimationFrame(rafId);
   rafId = null;
   lastTs = null;
@@ -314,6 +341,7 @@ function startCalibration() {
   state.calibration.topLine = null;
   state.calibration.motion = null;
   setScriptText(CALIBRATION_SCRIPT);
+  calibScrollBtn.textContent = 'Start';
   updateCalibrationUI();
 }
 
@@ -435,6 +463,8 @@ loadSampleBtn.addEventListener('click', () => {
 loadCalibScriptBtn.addEventListener('click', () => {
   setScriptText(CALIBRATION_SCRIPT);
 });
+
+calibScrollBtn.addEventListener('click', toggle);
 
 prompterOnlyBtn.addEventListener('click', togglePrompterOnly);
 
