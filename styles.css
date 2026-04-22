@@ -189,6 +189,14 @@ body.prompter-only .viewport {
   height: 100vh;
 }
 
+body.prompter-only .prompter-overlay {
+  display: flex;
+}
+
+body.prompter-only.overlay-hidden .prompter-overlay {
+  display: none;
+}
+
 .panel {
   border: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.04);
@@ -253,6 +261,47 @@ body.prompter-only .viewport {
   outline: none;
   overflow: hidden;
   position: relative;
+}
+
+.prompter-overlay {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 12px;
+  z-index: 20;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+}
+
+.overlay-spacer {
+  flex: 1;
+}
+
+.overlay-btn {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.overlay-btn:active {
+  transform: translateY(1px);
+}
+
+.overlay-btn.overlay-primary {
+  background: linear-gradient(135deg, rgba(124, 92, 255, 0.95), rgba(124, 92, 255, 0.55));
+  border-color: rgba(124, 92, 255, 0.7);
 }
 
 .inner {

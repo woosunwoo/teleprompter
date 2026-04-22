@@ -22,6 +22,11 @@ const prompterOnlyBtn = document.getElementById('prompterOnlyBtn');
 const enterFullscreenBtn = document.getElementById('enterFullscreenBtn');
 const swapPanelsBtn = document.getElementById('swapPanelsBtn');
 
+const overlayToggleBtn = document.getElementById('overlayToggleBtn');
+const overlayScrollBtn = document.getElementById('overlayScrollBtn');
+const overlayResetBtn = document.getElementById('overlayResetBtn');
+const overlayFullscreenBtn = document.getElementById('overlayFullscreenBtn');
+
 const DEFAULTS = {
   fontSizePx: 56,
   speedPxPerSec: 60,
@@ -110,6 +115,7 @@ function start() {
   if (isRunning) return;
   isRunning = true;
   toggleScrollBtn.textContent = 'Stop';
+  overlayScrollBtn.textContent = 'Stop';
   viewport.focus();
   rafId = requestAnimationFrame(tick);
 }
@@ -118,6 +124,7 @@ function stop() {
   if (!isRunning) return;
   isRunning = false;
   toggleScrollBtn.textContent = 'Start';
+  overlayScrollBtn.textContent = 'Start';
   if (rafId != null) cancelAnimationFrame(rafId);
   rafId = null;
   lastTs = null;
@@ -139,6 +146,7 @@ function toggleFullscreen() {
 
 function setPrompterOnly(enabled) {
   document.body.classList.toggle('prompter-only', enabled);
+  if (!enabled) document.body.classList.remove('overlay-hidden');
   prompterOnlyBtn.textContent = enabled ? 'Exit Prompter Only' : 'Prompter Only';
 }
 
@@ -176,6 +184,20 @@ toggleScrollBtn.addEventListener('click', toggle);
 resetBtn.addEventListener('click', () => {
   stop();
   resetScroll();
+});
+
+overlayScrollBtn.addEventListener('click', toggle);
+
+overlayResetBtn.addEventListener('click', () => {
+  stop();
+  resetScroll();
+});
+
+overlayFullscreenBtn.addEventListener('click', toggleFullscreen);
+
+overlayToggleBtn.addEventListener('click', () => {
+  const hidden = document.body.classList.toggle('overlay-hidden');
+  overlayToggleBtn.textContent = hidden ? 'Show' : 'Hide';
 });
 
 clearBtn.addEventListener('click', () => {
@@ -250,5 +272,7 @@ window.addEventListener('resize', () => {
   setSpeed(DEFAULTS.speedPxPerSec);
   setMirrored(DEFAULTS.mirrored);
   setPrompterOnly(false);
+  overlayToggleBtn.textContent = 'Hide';
+  overlayScrollBtn.textContent = 'Start';
   setScriptText('');
 })();
