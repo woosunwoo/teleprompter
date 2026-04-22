@@ -68,7 +68,7 @@ function getSpeed() {
 
 function applyTransform() {
   const mirrored = mirrorToggle.checked;
-  const translate = `translate3d(0, ${scrollY}px, 0)`;
+  const translate = `translate3d(0, ${-scrollY}px, 0)`;
   inner.style.transform = mirrored ? `${translate} scaleX(-1)` : translate;
 }
 
@@ -220,7 +220,7 @@ loadSampleBtn.addEventListener('click', () => {
       '- Reset: button or R',
       '- Font: A- / A+ or slider',
       '- Speed: slider (px/s)',
-      '- Mirror vertical: toggle',
+      '- Mirror (left-right): toggle',
       '',
       'Tip: Put your browser in fullscreen for a clean prompter view.',
       '',
