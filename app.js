@@ -3,6 +3,7 @@ const scriptDisplay = document.getElementById('scriptDisplay');
 const viewport = document.getElementById('viewport');
 const inner = document.getElementById('inner');
 const prompterPanel = document.getElementById('prompterPanel');
+const topbar = document.querySelector('.topbar');
 
 const toggleScrollBtn = document.getElementById('toggleScrollBtn');
 const resetBtn = document.getElementById('resetBtn');
@@ -190,6 +191,7 @@ function setOrientation(orientation, { preset = 'custom', persist = true } = {})
   };
   state.preset = preset;
   syncOrientationControls();
+  applyTopbarTransform();
   resetScroll();
   if (persist) saveSettings();
 }
@@ -217,6 +219,7 @@ function applyPreset(name, { persist = true } = {}) {
   state.scrollDirection = preset.scrollDirection;
   state.preset = name;
   syncOrientationControls();
+  applyTopbarTransform();
   resetScroll();
   if (persist) saveSettings();
 }
@@ -225,13 +228,22 @@ function getSpeed() {
   return Number(speedRange.value);
 }
 
+function getOrientationTransformParts() {
+  const parts = [];
+  if (state.orientation.rotate180) parts.push('rotate(180deg)');
+  if (state.orientation.flipX) parts.push('scaleX(-1)');
+  if (state.orientation.flipY) parts.push('scaleY(-1)');
+  return parts;
+}
+
+function applyTopbarTransform() {
+  const parts = getOrientationTransformParts();
+  topbar.style.transform = parts.length ? parts.join(' ') : 'none';
+}
+
 function applyTransform() {
   const translateY = state.scrollDirection === 'up' ? -scrollY : scrollY;
-  const transforms = [`translate3d(0, ${translateY}px, 0)`];
-
-  if (state.orientation.rotate180) transforms.push('rotate(180deg)');
-  if (state.orientation.flipX) transforms.push('scaleX(-1)');
-  if (state.orientation.flipY) transforms.push('scaleY(-1)');
+  const transforms = [`translate3d(0, ${translateY}px, 0)`, ...getOrientationTransformParts()];
 
   inner.style.transform = transforms.join(' ');
 }
@@ -599,6 +611,7 @@ window.addEventListener('resize', () => {
       state.calibration.readability = saved.calibration.readability ?? null;
     }
     syncOrientationControls();
+    applyTopbarTransform();
   } else {
     applyPreset(DEFAULTS.preset, { persist: false });
   }
