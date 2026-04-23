@@ -115,6 +115,8 @@ let isRunning = false;
 let rafId = null;
 let lastTs = null;
 let scrollY = 0;
+let isTouchDragging = false;
+let lastTouchY = null;
 
 function clamp(n, min, max) {
   return Math.max(min, Math.min(max, n));
@@ -269,6 +271,44 @@ function measureMaxScroll() {
   const viewportH = viewport.clientHeight;
   const innerH = inner.scrollHeight;
   return Math.max(0, innerH - viewportH);
+}
+
+function clampScrollAndApply() {
+  const maxScroll = measureMaxScroll();
+  scrollY = clamp(scrollY, 0, maxScroll);
+  applyTransform();
+}
+
+function isInteractiveTouchTarget(target) {
+  return !!target.closest('button, input, select, textarea, .prompter-overlay, .calibration-card');
+}
+
+function handleViewportTouchStart(e) {
+  if (e.touches.length !== 1) return;
+  if (isInteractiveTouchTarget(e.target)) return;
+
+  isTouchDragging = true;
+  lastTouchY = e.touches[0].clientY;
+  stop();
+  e.preventDefault();
+}
+
+function handleViewportTouchMove(e) {
+  if (!isTouchDragging || e.touches.length !== 1) return;
+
+  const y = e.touches[0].clientY;
+  const deltaY = y - lastTouchY;
+  lastTouchY = y;
+
+  const scrollSign = state.scrollDirection === 'up' ? -1 : 1;
+  scrollY += deltaY * scrollSign;
+  clampScrollAndApply();
+  e.preventDefault();
+}
+
+function endViewportTouchDrag() {
+  isTouchDragging = false;
+  lastTouchY = null;
 }
 
 function tick(ts) {
@@ -586,10 +626,13 @@ window.addEventListener('keydown', (e) => {
 });
 
 window.addEventListener('resize', () => {
-  const maxScroll = measureMaxScroll();
-  scrollY = clamp(scrollY, 0, maxScroll);
-  applyTransform();
+  clampScrollAndApply();
 });
+
+viewport.addEventListener('touchstart', handleViewportTouchStart, { passive: false });
+viewport.addEventListener('touchmove', handleViewportTouchMove, { passive: false });
+viewport.addEventListener('touchend', endViewportTouchDrag);
+viewport.addEventListener('touchcancel', endViewportTouchDrag);
 
 (function init() {
   const saved = loadSettings();
